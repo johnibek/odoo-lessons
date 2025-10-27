@@ -1,0 +1,154 @@
+<odoo>
+    <!--  Form View  -->
+    <record id="view_form_product" model="ir.ui.view">
+        <field name="name">custom.product.form</field>
+        <field name="model">custom.product</field>
+        <field name="arch" type="xml">
+            <form string="Product">
+                <header>
+                    <button name="action_done" string="Make status done" type="object" class="btn-primary" confirm="Are you sure?"/>
+                    <button name="action_draft" string="Make status draft" type="object" class="btn-secondary" confirm="Are you sure?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Done" bg_color="bg-success" invisible="state != 'done'"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="amount"/>
+                        <field name="state"/>
+                        <field name="quality"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--  List View  -->
+    <record id="view_list_product" model="ir.ui.view">
+        <field name="name">custom.product.list</field>
+        <field name="model">custom.product</field>
+        <field name="arch" type="xml">
+            <list string="Products" duplicate="false">
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="state"/>
+                <field name="quality"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <!--  Search View  -->
+    <record id="view_search_product" model="ir.ui.view">
+        <field name="name">custom.product.search</field>
+        <field name="model">custom.product</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Product Name" filter_domain="[('name', '=', self)]"/>
+                <filter name="draft_products" string="Draft Products" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="done_products" string="Done Products" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter name="amount_less_than_3" string="Less than 3" domain="[('amount', '&lt;', 3)]"/>
+                <group>
+                    <filter name="group_by_state" string="State" context="{'group_by':'state'}"/>
+                    <filter name="group_by_amount" string="Amount" context="{'group_by':'amount'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" string="Product State" icon="fa-flag" enable_counters="true"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_quick_create_form" model="ir.ui.view">
+        <field name="name">product_quick_create_form</field>
+        <field name="model">custom.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="amount"/>
+                    <field name="state"/>
+                    <field name="quality"/>
+                    <field name="status"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_kanban_product" model="ir.ui.view">
+        <field name="name">custom.product.kanban</field>
+        <field name="model">custom.product</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="1" quick_create_view="my_module.product_quick_create_form">
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="quality"/>
+                <progressbar
+                        field="status"
+                        colors='{"not_started": "danger", "started": "info", "finished": "success"}'
+                        sum_field="amount"
+                />
+
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <strong><field name="name"/></strong>
+                        </div>
+                        <div>
+                            <field name="amount"/>
+                        </div>
+                        <div>
+                            <field name="quality" widget="priority"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--  Report template  -->
+    <template id="report_custom_product_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="product">
+                <div class="page">
+                    <h2>Product Report</h2>
+                    <p><strong>Name:</strong> <t t-esc="product.name"/></p>
+                    <p><strong>Amount:</strong> <t t-esc="product.amount"/></p>
+                    <p><strong>Status:</strong> <t t-esc="product.state"/></p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_custom_product" model="ir.actions.report">
+        <field name="name">Product Report</field>
+        <field name="model">custom.product</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">my_module.report_custom_product_document</field>
+        <field name="report_file">my_module.report_custom_product_document</field>
+        <field name="print_report_name">'Product - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_custom_product"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--  Action  -->
+    <record id="action_custom_product" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">custom.product</field>
+        <field name="view_mode">list,form,search,kanban</field>
+        <field name="context">
+            {
+                'search_default_amount_less_than_3': True,
+            }
+        </field>
+    </record>
+
+    <!--  Menu  -->
+    <menuitem id="menu_product_root" name="Product Management"/>
+
+    <menuitem id="menu_custom_product" name="Products" parent="menu_product_root"
+              action="action_custom_product"/>
+</odoo>

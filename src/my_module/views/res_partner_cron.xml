@@ -1,0 +1,34 @@
+<odoo>
+  <!-- 1) ir.cron yozuvi -->
+  <record id="ir_cron_partner_cleanup" model="ir.cron">
+    <!-- Name: cron nomi (ko'rinishda) -->
+    <field name="name">Cleanup Inactive Partners</field>
+
+    <!-- Model: qaysi model ustida ishlashini ko'rsatadi.
+         'base.model_res_partner' Odoo'ning ir.model yozuvida res.partner ga mos keladi -->
+    <field name="model_id" ref="base.model_res_partner"/>
+
+    <!-- State: kod chaqirilishi turi.
+         'code' — XML ichidagi `code` maydoni ishlatiladi (model.cleanup_inactive_partners()). -->
+    <field name="state">code</field>
+
+    <!-- Code: cron ishga tushganda bajariladigan Python ifodasi.
+         'model' obyekti bu yerda self.env['res.partner'] ga teng bo'ladi. -->
+    <field name="code">model.cleanup_inactive_partners()</field>
+
+    <!-- Interval — qancha oraliq bilan ishlashi -->
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+
+    <!-- Next execution (ixtiyoriy): keyingi ishga tushirish vaqti -->
+    <!-- nextcall odatda string yoki eval bilan beriladi -->
+    <!-- Misol: ertangi kun soat 02:00 ga belgilash -->
+    <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 02:00:00')"/>
+
+    <!-- Cronni kim sifatida ishlashi (user_id) — odatda root yoki specific user -->
+    <field name="user_id" ref="base.user_root"/>
+
+    <!-- Active: cron yoqilgan yoki o'chirilgan -->
+    <field name="active">True</field>
+  </record>
+</odoo>
