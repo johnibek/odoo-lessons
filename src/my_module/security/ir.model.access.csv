@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_school_student_manager,access_school_student_manager,model_school_student,my_module.school_group_manager,1,1,1,1
 access_school_student_teacher,access_school_student_teacher,model_school_student,my_module.school_group_teacher,1,0,0,0
 access_custom_product,access_custom_product,model_custom_product,base.group_user,1,1,1,1
+my_module.access_student_score,access_student_score,my_module.model_student_score,base.group_user,1,1,1,1

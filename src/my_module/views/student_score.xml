@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="student_score_form_view" model="ir.ui.view">
+        <field name="name">student.score.form.view</field>
+        <field name="model">student.score</field>
+        <field name="arch" type="xml">
+            <form string="Student Score Form">
+                <sheet>
+                    <group>
+                        <field name="student_id"/>
+                        <field name="exam_score"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="student_score_list_view" model="ir.ui.view">
+        <field name="name">student.score.list.view</field>
+        <field name="model">student.score</field>
+        <field name="arch" type="xml">
+            <list string="Student Score List">
+                <field name="student_id"/>
+                <field name="exam_score"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_student_score" model="ir.actions.act_window">
+        <field name="name">Student Score</field>
+        <field name="res_model">student.score</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_student_score" name="Student Score" parent="menu_school_root" action="action_student_score"/>
+</odoo>

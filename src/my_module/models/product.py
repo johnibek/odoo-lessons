@@ -4,12 +4,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Product(models.Model):
     _name = "custom.product"
     _description = "Product Model"
 
     name = fields.Char(string="Product Name", required=True)
     amount = fields.Float(string="Product Amount", required=True)
+    price = fields.Monetary(string="Product Price", required=True, currency_field='currency_id')
+    currency_id = fields.Many2one('res.currency', string="Currency", required=True)
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -33,8 +36,23 @@ class Product(models.Model):
     )
 
     @api.model
+    def default_get(self, fields_list):
+        print(fields_list)
+        rtn = super(Product, self).default_get(fields_list)
+        rtn['amount'] = 20
+        rtn['name'] = 'Sample Product'
+        rtn['quality'] = '3'
+        print(rtn)
+        return rtn
+
+    @api.model
     def _read_product_states(self, values, domain):
         return [key for key, label in self._fields['state'].selection]
+
+    @api.model
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f"{self.name} - {self.amount}"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -48,7 +66,7 @@ class Product(models.Model):
             logger.info(f"Product {record.name} created")
 
         return records
-    
+
     def write(self, vals):
         if 'amount' in vals and vals['amount'] < 0:
             raise ValidationError("Amount cannot be negative")

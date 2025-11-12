@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data noupdate="0">
+        <record id="partner_john" model="res.partner">
+            <field name="name">John</field>
+            <field name="phone">+998901234567</field>
+            <field name="category_id" eval="[(6, 0, [ref('base.res_partner_category_14'), ref('base.res_partner_category_11')])]"/>
+        </record>
+
+        <record id="partner_thomas" model="res.partner">
+            <field name="name">Thomas</field>
+            <field name="phone">+998911234568</field>
+            <field name="category_id" eval="[(4, ref('base.res_partner_category_3'))]"/>
+            <field name="image_1920" file="my_module/static/description/tom.jpeg" type="base64"/>
+        </record>
+    </data>
+</odoo>

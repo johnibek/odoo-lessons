@@ -16,6 +16,8 @@
                                 <field name="last_name"/>
                                 <field name="age"/>
                                 <field name="grade"/>
+                                <field name="is_active"/>
+                                <field name="country"/>
                             </group>
                         </page>
                         <page string="Contact Info">
@@ -39,6 +41,7 @@
                     string="Students"
                     decoration-danger="age &lt; 18"
                     decoration-info="age &gt; 18"
+                    default_order="create_date desc"
             >
                 <field name="first_name"/>
                 <field name="last_name"/>
@@ -47,6 +50,8 @@
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="grade"/>
+                <field name="is_active"/>
+                <field name="country"/>
             </list>
         </field>
     </record>
